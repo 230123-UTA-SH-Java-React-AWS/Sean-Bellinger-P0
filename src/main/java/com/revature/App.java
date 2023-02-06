@@ -2,10 +2,6 @@ package com.revature;
 
 import java.net.InetSocketAddress;
 
-import com.revature.models.*;
-import com.revature.service.*;
-import com.revature.utils.ConnectionUtil;
-import com.revature.repositories.*;
 import com.revature.controllers.*;
 
 import com.sun.net.httpserver.HttpServer;
@@ -19,10 +15,13 @@ public final class App {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
-        server.createContext("/", new EmployeeController());
+        server.createContext("/promotion", new ManagerController());
+        server.createContext("/register", new EmployeeController());
+        server.createContext("/createTicket", new TicketController());
+        server.createContext("/reviewTicket", new ReviewTicketController());
+        server.createContext("/processTicket", new ProcessTicketController());
 
         server.setExecutor(null);
         server.start();
-
     }
 }

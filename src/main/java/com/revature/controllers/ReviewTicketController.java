@@ -9,11 +9,11 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import com.revature.service.Register;
+import com.revature.service.reviewTickets;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class EmployeeController implements HttpHandler {
+public class ReviewTicketController implements HttpHandler {
     
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -54,8 +54,8 @@ public class EmployeeController implements HttpHandler {
 
         exchange.sendResponseHeaders(200, textbuilder.toString().getBytes().length);
 
-        Register register = new Register();
-        register.registerEmployee(textbuilder.toString());
+        reviewTickets reviewTickets = new reviewTickets();
+        reviewTickets.collectTickets(textbuilder.toString());
 
         OutputStream os = exchange.getResponseBody();
         os.write(textbuilder.toString().getBytes());

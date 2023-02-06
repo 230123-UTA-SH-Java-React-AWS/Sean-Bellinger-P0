@@ -1,15 +1,42 @@
 package com.revature.models;
 
+import java.math.BigDecimal;
+
 public class Tickets {
     
-    private int amount;
+    private BigDecimal amount;
     private String description;
-    private boolean status;
+    private String email;
+    public enum Status {
+        PENDING("Pending"),
+        DECLINED("Declined"),
+        APPROVED("Approved");
+        public String value;
+        
+        Status(String statusArg) {
+            value = statusArg;
+        }
 
-    public int getAmount() {
+        public String getValue(){
+            return value;
+        }
+
+    }
+    
+
+
+    private Status status = Status.PENDING;
+    
+    public Status getStatus() {
+        return status;
+    }
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+    public BigDecimal getAmount() {
         return amount;
     }
-    public void setAmount(int amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
     public String getDescription() {
@@ -18,12 +45,11 @@ public class Tickets {
     public void setDescription(String description) {
         this.description = description;
     }
-    public boolean isStatus() {
-        return status;
+    public String getEmail() {
+        return email;
     }
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setEmail(String email) {
+        this.email = email;
     }
-    
     
 }

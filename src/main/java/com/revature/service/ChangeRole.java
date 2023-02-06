@@ -2,38 +2,34 @@ package com.revature.service;
 
 import java.io.IOException;
 
-
 import com.revature.models.Employees;
+import com.revature.models.Employees.Role;
 import com.revature.repositories.EmployeeRepository;
-
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
+public class ChangeRole {
 
-public class Register {
-
-    public void registerEmployee(String employee){
-
+    public void changeEmployeeRole(String employee){
+        
         EmployeeRepository repo = new EmployeeRepository();
-
+        
         ObjectMapper mapper = new ObjectMapper();
-
 
         try {
 
-            Employees newEmployee = mapper.readValue(employee, Employees.class);
-            if(!repo.getAllEmployees().contains(newEmployee.getEmail())){
-                repo.Save(newEmployee);
-                System.out.println("Employee Registered");
-            } else if(newEmployee.getPassword().equals(repo.checkPassword(newEmployee))){
-                System.out.println("You're Logged in!");
-            } else {
-                System.out.println("Wrong Password.");
+            Employees currentEmployee = mapper.readValue(employee, Employees.class);
+
+            if(repo.getAllEmployees().contains(currentEmployee.getEmail())){
+                currentEmployee.setRole(Role.MANAGER);
+                repo.promoteEmployee(currentEmployee);
+                System.out.println("Employee Promoted to Manager!");
+            }else{
+                System.out.println("We only promote from within.");
             }
-            // repo.Save(newEmployee);
-        } catch (JsonParseException e) {
+        }catch (JsonParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (JsonMappingException e) {
