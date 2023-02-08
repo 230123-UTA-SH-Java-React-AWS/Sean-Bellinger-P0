@@ -55,6 +55,7 @@ public class TicketController implements HttpHandler {
     private void postRequest(HttpExchange exchange)throws IOException {
 
         InputStream is = exchange.getRequestBody();
+        String newTicket;
 
         StringBuilder textbuilder = new StringBuilder();
 
@@ -66,13 +67,13 @@ public class TicketController implements HttpHandler {
             }
         }
 
-        exchange.sendResponseHeaders(200, textbuilder.toString().getBytes().length);
-
+        
         CreateExpenseTicket ticket = new CreateExpenseTicket();
-        ticket.createTicket(textbuilder.toString());
+        newTicket = ticket.createTicket(textbuilder.toString());
+        exchange.sendResponseHeaders(200, newTicket.getBytes().length);
 
         OutputStream os = exchange.getResponseBody();
-        os.write(textbuilder.toString().getBytes());
+        os.write(newTicket.getBytes());
         os.close();
 
     }

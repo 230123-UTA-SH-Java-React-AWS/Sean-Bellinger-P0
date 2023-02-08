@@ -1,11 +1,14 @@
 package com.revature.repositories;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashSet;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 
 import com.revature.models.Employees;
 import com.revature.utils.ConnectionUtil;
@@ -35,7 +38,7 @@ public class EmployeeRepository {
         return employeeList;
     }
 
-    public boolean checkManagerStatus(Employees employee){
+    public boolean checkManagerStatus(String emailString){
 
         
         String sql = "select employeerole from employees where employeeemail = ?";
@@ -43,7 +46,7 @@ public class EmployeeRepository {
 
         try(Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
-            prstmt.setString(1, employee.getEmail());
+            prstmt.setString(1, emailString);
             ResultSet rs = prstmt.executeQuery();
             rs.next();
             String employeeRole = rs.getString(1);
@@ -60,15 +63,15 @@ public class EmployeeRepository {
     }
 
 
-    public void promoteEmployee(Employees employee){
+    public void promoteEmployee(String employeeEmail){
 
         String sql = "update employees set employeerole = ? where employeeemail = ?";
    
 
         try(Connection con = ConnectionUtil.getConnection()) {
             PreparedStatement prstmt = con.prepareStatement(sql);
-            prstmt.setString(1, employee.getRole().getValue());
-            prstmt.setString(2, employee.getEmail());
+            prstmt.setString(1, "Manager");
+            prstmt.setString(2, employeeEmail);
             prstmt.execute();
 
 
@@ -104,7 +107,6 @@ public class EmployeeRepository {
 
             try(Connection con = ConnectionUtil.getConnection()) {
                 PreparedStatement prstmt = con.prepareStatement(sql);
-                System.out.println("We made it to the preparedstatement!");
 
                 prstmt.setString(1, employee.getEmail());
                 prstmt.setString(2, employee.getPassword());

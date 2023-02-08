@@ -16,10 +16,12 @@ public final class App {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
         server.createContext("/promotion", new ManagerController());
-        server.createContext("/register", new EmployeeController());
+        server.createContext("/registerlogin", new EmployeeController());
         server.createContext("/createTicket", new TicketController());
         server.createContext("/reviewTicket", new ReviewTicketController());
         server.createContext("/processTicket", new ProcessTicketController());
+        server.createContext("/viewPersonalTickets", new PersonalTicketsController());
+
 
         server.setExecutor(null);
         server.start();

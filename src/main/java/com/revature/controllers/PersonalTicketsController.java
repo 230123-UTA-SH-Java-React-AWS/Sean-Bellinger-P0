@@ -9,11 +9,12 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import com.revature.service.ChangeRole;
+import com.revature.service.processTicket;
+import com.revature.service.viewPersonalTickets;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class ManagerController implements HttpHandler {
+public class PersonalTicketsController implements HttpHandler {
     
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -41,7 +42,7 @@ public class ManagerController implements HttpHandler {
     private void postRequest(HttpExchange exchange)throws IOException {
 
         InputStream is = exchange.getRequestBody();
-        String promotion;
+
         StringBuilder textbuilder = new StringBuilder();
 
         try (Reader reader = new BufferedReader(new InputStreamReader(is, Charset.forName(StandardCharsets.UTF_8.name())))) {
@@ -52,13 +53,14 @@ public class ManagerController implements HttpHandler {
             }
         }
 
-        
-        ChangeRole changeRole = new ChangeRole();
-        promotion = changeRole.changeEmployeeRole(textbuilder.toString());
-        exchange.sendResponseHeaders(200, promotion.getBytes().length);
+        String response;
+
+        viewPersonalTickets yourTickets = new viewPersonalTickets();
+        response = yourTickets.viewYourTickets(textbuilder.toString());
+        exchange.sendResponseHeaders(200, response.getBytes().length);
 
         OutputStream os = exchange.getResponseBody();
-        os.write(promotion.getBytes());
+        os.write(response.getBytes());
         os.close();
 
 

@@ -10,37 +10,31 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.revature.models.Employees;
 import com.revature.models.Tickets;
+import com.revature.models.Tickets.Status;
 import com.revature.repositories.EmployeeRepository;
 import com.revature.repositories.TicketRepositoriy;
 
-public class reviewTickets {
+public class processTicket {
+    
+    public String approveProcess(String jString){
 
-    /*
-     * use getAllEmployees() to pull list of employess WHERE role is manager
-     * If email associated is manager proceed
-     * pull tickets into a list, if WHERE status is pending
-     * order by ID
-     * create another service to approve or deny by ticket id number.
-     */
-
-     public String collectTickets(String jString){
-        
-        EmployeeRepository employeeRepo = new EmployeeRepository();
-        TicketRepositoriy ticketRepo = new TicketRepositoriy();
-        
+        EmployeeRepository empRepo = new EmployeeRepository();
+        TicketRepositoriy tickRepo = new TicketRepositoriy();
         ObjectMapper mapper = new ObjectMapper();
-        String currentTicket = "";
         
-        try {
+        try{
             JsonNode treeNode = mapper.readTree(jString);
             String treeNodeEmail = treeNode.get("email").asText();
-
-            if(employeeRepo.checkManagerStatus(treeNodeEmail)){
-                ArrayList<Tickets> ticketList = ticketRepo.getAllPendingTickets();
-                currentTicket = mapper.writeValueAsString(ticketList);
+            // String treeNodeStatus = treeNode.get("status").asText();
+            // String treeNodeID = treeNode.get("ticketID").asText();
+            if(empRepo.checkManagerStatus(treeNodeEmail)){
+                // ArrayList<Tickets> pendingList = tickRepo.getAllPendingTickets();
+                tickRepo.Update(treeNode);
+                return "Ticket has been approved";
             }else{
-                System.out.println("Only Managers can review tickets.");
+                return "Only Managers can process tickets.";
             }
+
         } catch (JsonParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -51,7 +45,7 @@ public class reviewTickets {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return currentTicket;
+        return "Something went wrong in the approval process function";
     }
 
 }

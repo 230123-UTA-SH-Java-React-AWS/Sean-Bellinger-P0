@@ -9,7 +9,7 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import com.revature.service.reviewTickets;
+import com.revature.service.processTicket;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -41,7 +41,7 @@ public class ProcessTicketController implements HttpHandler {
     private void postRequest(HttpExchange exchange)throws IOException {
 
         InputStream is = exchange.getRequestBody();
-
+        String approved;
         StringBuilder textbuilder = new StringBuilder();
 
         try (Reader reader = new BufferedReader(new InputStreamReader(is, Charset.forName(StandardCharsets.UTF_8.name())))) {
@@ -52,13 +52,13 @@ public class ProcessTicketController implements HttpHandler {
             }
         }
 
-        exchange.sendResponseHeaders(200, textbuilder.toString().getBytes().length);
-
-        reviewTickets reviewTickets = new reviewTickets();
-        reviewTickets.collectTickets(textbuilder.toString());
+        
+        processTicket approveTickets = new processTicket();
+        approved = approveTickets.approveProcess(textbuilder.toString());
+        exchange.sendResponseHeaders(200, approved.getBytes().length);
 
         OutputStream os = exchange.getResponseBody();
-        os.write(textbuilder.toString().getBytes());
+        os.write(approved.getBytes());
         os.close();
 
 

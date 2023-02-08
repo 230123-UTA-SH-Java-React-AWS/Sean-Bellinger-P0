@@ -12,9 +12,9 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 
-public class Register {
+public class RegisterLogin {
 
-    public void registerEmployee(String employee){
+    public String registerEmployee(String employee){
 
         EmployeeRepository repo = new EmployeeRepository();
 
@@ -26,11 +26,11 @@ public class Register {
             Employees newEmployee = mapper.readValue(employee, Employees.class);
             if(!repo.getAllEmployees().contains(newEmployee.getEmail())){
                 repo.Save(newEmployee);
-                System.out.println("Employee Registered");
+                return "Employee Registered";
             } else if(newEmployee.getPassword().equals(repo.checkPassword(newEmployee))){
-                System.out.println("You're Logged in!");
+                return "You're Logged in!";
             } else {
-                System.out.println("Wrong Password.");
+                return "Wrong Password.";
             }
             // repo.Save(newEmployee);
         } catch (JsonParseException e) {
@@ -43,6 +43,6 @@ public class Register {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        return "Something went wrong in the registration/login function";
     }
 }

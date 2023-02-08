@@ -6,28 +6,31 @@ import com.revature.models.Employees;
 import com.revature.models.Employees.Role;
 import com.revature.repositories.EmployeeRepository;
 
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class ChangeRole {
 
-    public void changeEmployeeRole(String employee){
+    public String changeEmployeeRole(String jString){
         
-        EmployeeRepository repo = new EmployeeRepository();
+        EmployeeRepository empRepo = new EmployeeRepository();
         
         ObjectMapper mapper = new ObjectMapper();
 
         try {
 
-            Employees currentEmployee = mapper.readValue(employee, Employees.class);
-
-            if(repo.getAllEmployees().contains(currentEmployee.getEmail())){
-                currentEmployee.setRole(Role.MANAGER);
-                repo.promoteEmployee(currentEmployee);
-                System.out.println("Employee Promoted to Manager!");
+            JsonNode treeNode = mapper.readTree(jString);
+            if(empRepo.checkManagerStatus(treeNode.get("firstEmail").asText())){
+                if(empRepo.getAllEmployees().contains(treeNode.get("secondEmail").asText())){
+                    empRepo.promoteEmployee(treeNode.get("secondEmail").asText());
+                    return "Employee Promoted to Manager!";
+                }else{
+                    return "We only promote from within.";
+                }
             }else{
-                System.out.println("We only promote from within.");
+                return "Only managers are allowed to promote.";
             }
         }catch (JsonParseException e) {
             // TODO Auto-generated catch block
@@ -39,6 +42,6 @@ public class ChangeRole {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        return "Soemthing went wrong in the promotion function";
     }
 }

@@ -28,7 +28,6 @@ public class ReviewTicketController implements HttpHandler {
                 postRequest(exchange);
                 break;
 
-
             default:
                 break;
 
@@ -43,6 +42,7 @@ public class ReviewTicketController implements HttpHandler {
         InputStream is = exchange.getRequestBody();
 
         StringBuilder textbuilder = new StringBuilder();
+        String pendingTickets;
 
         try (Reader reader = new BufferedReader(new InputStreamReader(is, Charset.forName(StandardCharsets.UTF_8.name())))) {
             int c = 0;
@@ -52,16 +52,16 @@ public class ReviewTicketController implements HttpHandler {
             }
         }
 
-        exchange.sendResponseHeaders(200, textbuilder.toString().getBytes().length);
-
+        
         reviewTickets reviewTickets = new reviewTickets();
-        reviewTickets.collectTickets(textbuilder.toString());
-
+        pendingTickets = reviewTickets.collectTickets(textbuilder.toString());
+        
+        exchange.sendResponseHeaders(200, pendingTickets.getBytes().length);
         OutputStream os = exchange.getResponseBody();
-        os.write(textbuilder.toString().getBytes());
+        os.write(pendingTickets.getBytes());
         os.close();
 
-
+        
 
     }
 
